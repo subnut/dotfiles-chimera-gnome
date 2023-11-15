@@ -1,5 +1,6 @@
 # vim: sw=0 ts=4 sts=4 et nowrap
 export ZDOTDIR=${ZDOTDIR-$HOME/.zsh}
+fpath=($ZDOTDIR/completions $fpath)
 
 
 ## `zsh-newuser-install`
