@@ -10,15 +10,20 @@ SAVEHIST=30000
 
 
 ## Config
-setopt AUTOPUSHD
+setopt AUTO_CD                  # cd if command is dir name
 setopt CORRECT                  # [nyae]? (Also see $SPROMPT)
-setopt EXTENDED_HISTORY         # add timestamp to .zsh_history
+setopt CDABLE_VARS              # `cd dir` - if dir doesn't exist, try ~dir
+setopt HIST_VERIFY              # VERY IMPORTANT. `sudo !!` <enter> doesn't execute directly. instead, it just expands.
 setopt HIST_IGNORE_DUPS         # ignore duplicate
 setopt HIST_IGNORE_SPACE        # command prefixed by space are incognito
 setopt HIST_REDUCE_BLANKS       # RemoveTrailingWhiteSpace
-setopt HIST_VERIFY              # VERY IMPORTANT. `sudo !!` <enter> doesn't execute directly. instead, it just expands.
 setopt INC_APPEND_HISTORY       # immediately _append_ to HISTFILE instead of _replacing_ it _after_ the shell exits
 setopt INTERACTIVE_COMMENTS     # Allow comments using '#' in interactive mode
+setopt PRINT_EXIT_VALUE
+setopt PUSHD_IGNORE_DUPS
+setopt NO_PUSHD_TO_HOME
+setopt PUSHD_MINUS
+setopt AUTO_PUSHD
 
 
 ## PATH
