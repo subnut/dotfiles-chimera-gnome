@@ -4,8 +4,16 @@ main() {
 	rm -rf root
 	rm -rf home
 
-	run save /etc/profile.d/xdg.sh
-	run save /etc/apk/world
+	{ sed "/^$/d;/^~\\//s|~|$HOME|" | while read FILE
+	do [ ${#FILE} -eq 0 ] || run save "$FILE"
+	done } <<-EOF
+
+		/etc/profile.d/xdg.sh
+		/etc/apk/world
+
+		~/.config/git/config
+
+	EOF
 }
 
 save() {
