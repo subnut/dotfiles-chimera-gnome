@@ -11,6 +11,8 @@ main() {
 		/etc/profile.d/xdg.sh
 		/etc/apk/world
 
+		~/.zsh
+		~/.zshrc
 		~/.config/git/config
 
 	EOF
@@ -27,8 +29,8 @@ save() {
         mkdir -p "$DESTDIR"
 
     if [ -d "$1" ]
-    then cp -R "$1" "$DESTDIR"
-    else cp    "$1" "$DESTDIR"
+    then cp -pPR "$1" "$DESTDIR"
+    else cp -pP  "$1" "$DESTDIR"
     fi
 }
 
