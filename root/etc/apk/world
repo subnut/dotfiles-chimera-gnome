@@ -16,11 +16,13 @@ fonts-twemoji-ttf
 fzf
 git
 gnome-tweaks
+hdparm
 htop
 lf
 linux-stable
 linux-stable-zfs-bin
 lvm2
+man-pages-devel
 mtools
 neovim
 pipx

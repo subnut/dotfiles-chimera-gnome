@@ -10,6 +10,7 @@ main() {
 
 		/etc/profile.d/xdg.sh
 		/etc/apk/world
+		/etc/doas.conf
 
 		~/.zsh
 		~/.zshrc
