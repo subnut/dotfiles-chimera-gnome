@@ -13,7 +13,8 @@ main() {
 
 		~/.zsh
 		~/.zshrc
-		~/.config/git/config
+		~/.config/lf
+		~/.config/git
 
 	EOF
 }

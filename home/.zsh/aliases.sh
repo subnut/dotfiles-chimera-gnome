@@ -1,5 +1,6 @@
 alias shrug="printf %s '¯\_(ツ)_/¯'"
 alias exists='command -v >/dev/null'
+alias vim=nvim
 
 
 ## Check --color support in `ls`
@@ -74,4 +75,5 @@ exists git && {
 }
 
 
-alias ncdu='ncdu --color off'
+exists ncdu && alias ncdu='ncdu --color off' || true
+exists bat && alias batp='bat --style=header-filename' || true

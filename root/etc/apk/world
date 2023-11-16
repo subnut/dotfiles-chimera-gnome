@@ -17,12 +17,16 @@ fzf
 git
 gnome-tweaks
 htop
+lf
 linux-stable
 linux-stable-zfs-bin
 lvm2
 mtools
 neovim
+pipx
+python-pip
 ripgrep
+tlp
 xorriso
 zfs
 zsh
