@@ -52,14 +52,6 @@ preexec_functions+=title_preexec
 } || true
 
 
-## `compinstall`
-zstyle ':completion:*' completer _complete _approximate _ignored
-zstyle ':completion:*' matcher-list '+m:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+m:{[:lower:][:upper:]}={[:upper:][:lower:]}' '' '+m:{[:lower:][:upper:]}={[:upper:][:lower:]}'
-zstyle ':completion:*' menu select
-autoload -Uz compinit
-compinit
-
-
 ## Other config
 source $ZDOTDIR/env.sh
 source $ZDOTDIR/prompt.zsh
@@ -68,14 +60,28 @@ source $ZDOTDIR/hashdirs.zsh
 source $ZDOTDIR/keybindings.zsh
 
 
+() {
 ## ZSH-specific features
+builtin local command;
 for command in curl; do
     if (( ${+commands[$command]} )); then
         alias $command="noglob $command"
     fi
 done
+builtin local func
 for func in gcm gcma; do
     if (( ${+functions[$func]} )); then
         alias $func="noglob $func"
     fi
 done
+}
+
+
+## `compinstall`
+zstyle ':completion:*' completer _complete _approximate _ignored
+zstyle ':completion:*' matcher-list '+m:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+m:{[:lower:][:upper:]}={[:upper:][:lower:]}' '' '+m:{[:lower:][:upper:]}={[:upper:][:lower:]}'
+zstyle ':completion:*' menu select
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*:messages' format %B%d%b
+autoload -Uz compinit
+compinit

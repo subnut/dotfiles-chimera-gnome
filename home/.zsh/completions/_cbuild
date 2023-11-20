@@ -1,40 +1,46 @@
 #compdef cbuild
 
-builtin local -a args
+builtin local -a archs
+builtin local -a flags
 builtin local -a commands
 
+archs=( ${$(cd ./${${words[1]}%cbuild}; ls etc/build_profiles/*.ini;)##*/} )
+
+builtin local _arch="architecture:($archs)"
+builtin local _dirs="directory:_files -/"
+
 # copied from cbuild --help output
-args=(
+flags=(
 	'(-h --help)'{-h,--help}'[Show this help message and exit]'
-	'(-c --config)'{-c+,--config=}'[The configuration file to use.]'
-	'(-f --force)'{-f,--force}'[Force writing a package even when it exists and template is older.]'
-	'(-L --no-color)'{-L,--no-color}'[Force plain output.]'
-	'(-j --jobs)'{-j+,--jobs=}'[Number of jobs to use.]'
-	'(-C --skip-check)'{-C,--skip-check}'[Skip running the check stage.]'
-	'(-X --check-fail)'{-X,--check-fail}'[Do not abort build if check fails.]'
-	'(-a --arch)'{-a+,--arch=}'[Target architecture to build for.]'
-	'(-A --host-arch)'{-A+,--host-arch=}'[Initial host architecture.]'
-	'(-b --build-root)'{-b+,--build-root=}'[The build root path.]'
-	'(-B --build-dir)'{-B+,--build-dir=}'[The path for build/destdir.]'
-	'(-r --repository-path)'{-r+,--repository-path=}'[Local repository path.]'
-	'(-R --alt-path)'{-R+,--alt-path=}'[Alternative repository to use.]'
-	'(-s --sources-path)'{-s+,--sources-path=}'[Sources storage path.]'
-	'(-G --no-dbg)'{-G,--no-dbg}'[Do not build debug packages.]'
-	'(-t --temporary)'{-t,--temporary}'[Use a temporary build root.]'
-	'(-N --no-remote)'{-N,--no-remote}'[Do not ever use remote repositories.]'
-	'(-D --dirty-build)'{-D,--dirty-build}'[Skip installing (and removing) dependencies.]'
-	'(-K --keep-temporary)'{-K,--keep-temporary}'[Keep temporary files and build dependencies after build.]'
-	'(--allow-unsigned)--allow-unsigned[Allow building without a signing key.]'
-	'(--stage)--stage[Keep built packages staged.]'
-	'(--stage-path)--stage-path=[Root path for staged packages.]'
+	'(-f --force)'{-f,--force}'[Force writing a package even when it exists and template is older]'
+	'(-L --no-color)'{-L,--no-color}'[Force plain output]'
+	'(-C --skip-check)'{-C,--skip-check}'[Skip running the check stage]'
+	'(-X --check-fail)'{-X,--check-fail}'[Do not abort build if check fails]'
+	'(-G --no-dbg)'{-G,--no-dbg}'[Do not build debug packages]'
+	'(-t --temporary)'{-t,--temporary}'[Use a temporary build root]'
+	'(-N --no-remote)'{-N,--no-remote}'[Do not ever use remote repositories]'
+	'(-D --dirty-build)'{-D,--dirty-build}'[Skip installing (and removing) dependencies]'
+	'(-K --keep-temporary)'{-K,--keep-temporary}'[Keep temporary files and build dependencies after build]'
+	'(-c --config)'{-c+,--config=}'[The configuration file to use]':'file':_files
+	'(-j --jobs)'{-j+,--jobs=}'[Number of jobs to use]':'number of jobs':' '
+	'(-a --arch)'{-a+,--arch=}'[Target architecture to build for]':$_arch
+	'(-A --host-arch)'{-A+,--host-arch=}'[Initial host architecture]':$_arch
+	'(-b --build-root)'{-b+,--build-root=}'[The build root path]':$_dirs
+	'(-B --build-dir)'{-B+,--build-dir=}'[The path for build/destdir]':$_dirs
+	'(-r --repository-path)'{-r+,--repository-path=}'[Local repository path]':$_dirs
+	'(-R --alt-repository)'{-R+,--alt-repository=}'[Alternative repository to use]':$_dirs
+	'(-s --sources-path)'{-s+,--sources-path=}'[Sources storage path]':$_dirs
+	'(--allow-unsigned)--allow-unsigned[Allow building without a signing key]'
+	'(--stage)--stage[Keep built packages staged]'
+	'(--stage-path)--stage-path=[Root path for staged packages]'
 	'(--dry-run)--dry-run[Do not perform changes to file system (only some commands)]'
-	'(--status-fd)--status-fd=[File descriptor for bulk build status (must be open).]'
-	'(--bulk-continue)--bulk-continue[Try building the remaining packages in case of bulk failures.]'
-	'(--update-check)--update-check[Perform a update-check before fetching sources.]'
-	'(--accept-checksums)--accept-checksums[Accept mismatched checksums when fetching.]'
+	'(--status-fd)--status-fd=[File descriptor for bulk build status (must be open)]'
+	'(--bulk-continue)--bulk-continue[Try building the remaining packages in case of bulk failures]'
+	'(--update-check)--update-check[Perform a update-check before fetching sources]'
+	'(--accept-checksums)--accept-checksums[Accept mismatched checksums when fetching]'
 )
 
-# < ... > | grep case | sed 's/^.*case //;s/"//g;s/://g;s/|//g'
+# cat src/runner.py | grep case | sed 's/^.*case //;s/"//g;s/://g;s/|//g'
 commands=(
 	binary-bootstrap
 	bootstrap
@@ -69,5 +75,16 @@ commands=(
 	bump-pkgrel
 )
 
-_arguments -s -S $args \
-	":commands:($commands)"
+case "$words[$CURRENT-1]" in
+	(fetch|extract|prepare|patch|configure|build|check|install|pkg)
+		builtin local -a pkgs
+		pkgs=( ${$(cd ./${${words[1]}%cbuild}; ls */*/template.py;)%/template.py} )
+		_arguments -s -S $flags \
+			"1:commands:($commands)" \
+			"2:packages:($pkgs)"
+		return;;
+esac
+
+
+_arguments -s -S $flags \
+	"1:commands:($commands)"
