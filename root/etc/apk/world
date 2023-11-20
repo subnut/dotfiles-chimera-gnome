@@ -7,6 +7,7 @@ chimerautils
 clang
 cryptsetup-scripts
 curl
+ddcutil
 fd
 firefox-wayland
 firmware-linux
@@ -16,7 +17,6 @@ fonts-twemoji-ttf
 fzf
 git
 gnome-tweaks
-hdparm
 htop
 lf
 linux-stable
@@ -26,6 +26,7 @@ man-pages-devel
 mtools
 neovim
 pipx
+power-profiles-daemon
 python-pip
 ripgrep
 tlp
