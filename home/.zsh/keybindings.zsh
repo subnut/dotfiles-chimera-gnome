@@ -17,7 +17,7 @@ function expand-or-complete_with_dots {
       local text=${BUFFER## }
       local leading_spaces=${BUFFER%$text}
       BUFFER=
-      zle .history-incremental-search-'$direction' $text
+      zle .history-incremental-search-'$direction' -- $text
       BUFFER=$leading_spaces$BUFFER
     }'
   done
