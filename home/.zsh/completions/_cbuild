@@ -4,7 +4,9 @@ builtin local -a archs
 builtin local -a flags
 builtin local -a commands
 
-archs=( ${$(cd ./${${words[1]}%cbuild}; ls etc/build_profiles/*.ini;)##*/} )
+builtin local cports
+cports=${$(command -v ${words[1]})%cbuild}
+archs=( ${$(cd $cports; ls etc/build_profiles/*.ini;)##*/} )
 
 builtin local _arch="architecture:($archs)"
 builtin local _dirs="directory:_files -/"
@@ -76,9 +78,10 @@ commands=(
 )
 
 case "$words[$CURRENT-1]" in
+	(relink-subpkgs|lint|cycle-check);|
 	(fetch|extract|prepare|patch|configure|build|check|install|pkg)
 		builtin local -a pkgs
-		pkgs=( ${$(cd ./${${words[1]}%cbuild}; ls */*/template.py;)%/template.py} )
+		pkgs=( ${$(cd cports; ls */*/template.py;)%/template.py} )
 		_arguments -s -S $flags \
 			"1:commands:($commands)" \
 			"2:packages:($pkgs)"
