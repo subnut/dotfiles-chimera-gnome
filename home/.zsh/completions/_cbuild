@@ -43,6 +43,7 @@ flags=( # copied from cbuild --help output
 )
 
 # cat src/runner.py | grep case | sed 's/^.*case //;s/"//g;s/://g;s/|//g'
+# Messages taken from Usage.md
 commands=(
 	binary-bootstrap'\:"Create build root from local packages"'
 	bootstrap'\:"Bootstrap from source"'
@@ -79,7 +80,9 @@ commands=(
 
 # See Usage.md
 case "$words[$CURRENT-1]" in
-	(fetch|extract|prepare|patch|configure|build|check|install|pkg);|
+	(fetch|extract|prepare);&
+	(patch|configure|build);&
+	(check|install|pkg);&
 	(lint|cycle-check)
 		_arguments -s -S "2:packages:($pkgs)"
 		return;;
