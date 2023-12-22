@@ -1,18 +1,18 @@
 #compdef cbuild
 
+builtin local -a pkgs
 builtin local -a archs
 builtin local -a flags
 builtin local -a commands
 
-builtin local cports
-cports=${$(command -v ${words[1]})%cbuild}
+builtin local cports="${$(command -v ${words[1]})%cbuild}"
+pkgs=( ${$(cd cports; ls */*/template.py;)%/template.py} )
 archs=( ${$(cd $cports; ls etc/build_profiles/*.ini;)##*/} )
 
 builtin local _arch="architecture:($archs)"
 builtin local _dirs="directory:_files -/"
 
-# copied from cbuild --help output
-flags=(
+flags=( # copied from cbuild --help output
 	'(-h --help)'{-h,--help}'[Show this help message and exit]'
 	'(-f --force)'{-f,--force}'[Force writing a package even when it exists and template is older]'
 	'(-L --no-color)'{-L,--no-color}'[Force plain output]'
@@ -44,22 +44,22 @@ flags=(
 
 # cat src/runner.py | grep case | sed 's/^.*case //;s/"//g;s/://g;s/|//g'
 commands=(
-	binary-bootstrap
-	bootstrap
-	bootstrap-update
-	keygen
-	chroot
-	clean
-	remove-autodeps
-	prune-obsolete
-	prune-removed
-	prune-pkgs
+	binary-bootstrap'\:"Create build root from local packages"'
+	bootstrap'\:"Bootstrap from source"'
+	bootstrap-update'\:"Update build root packages"'
+	keygen'\:"Generate signing key"'
+	chroot'\:"Enter build root with interactive shell"'
+	clean'\:"Cleanup build root"'
+	remove-autodeps'\:"Remove automatically installed pkgs from build root"'
+	prune-obsolete'\:"Prune obsolete packages within all repos for current architecture"'
+	prune-removed'\:"Prune removed packages within all repos for current architecture"'
+	prune-pkgs'\:"Run prune-obsolete followed by prune-removed"'
 	prune-sources
-	relink-subpkgs
-	index
-	zap
-	lint
-	cycle-check
+	relink-subpkgs'\:"Recreate or prune subpackage symlinks"'
+	index'\:"Reindex a repository / all repositories"'
+	zap'\:"Remove build root"'
+	lint'\:"Lint package template"'
+	cycle-check'\:"Scan for build-time dependency cycle"'
 	update-check
 	dump
 	print-build-graph
@@ -68,8 +68,8 @@ commands=(
 	fetch  extract  prepare
 	patch  configure  build
 	check  install  pkg
-	unstage
-	unstage-check-remote
+	unstage'\:"Unstage repository"'
+	unstage-check-remote'\:"Check if local pkgs would unstage cleanly in remote repo"'
 	bulk-pkg
 	bulk-print
 	bulk-raw
@@ -77,17 +77,17 @@ commands=(
 	bump-pkgrel
 )
 
+# See Usage.md
 case "$words[$CURRENT-1]" in
-	(relink-subpkgs|lint|cycle-check);|
-	(fetch|extract|prepare|patch|configure|build|check|install|pkg)
-		builtin local -a pkgs
-		pkgs=( ${$(cd cports; ls */*/template.py;)%/template.py} )
-		_arguments -s -S $flags \
-			"1:commands:($commands)" \
-			"2:packages:($pkgs)"
+	(fetch|extract|prepare|patch|configure|build|check|install|pkg);|
+	(lint|cycle-check)
+		_arguments -s -S "2:packages:($pkgs)"
+		return;;
+	(relink-subpkgs)
+		_arguments -s -S "2:arguments:(prune $pkgs)"
 		return;;
 esac
 
 
 _arguments -s -S $flags \
-	"1:commands:($commands)"
+	"1:commands:(($commands))"
