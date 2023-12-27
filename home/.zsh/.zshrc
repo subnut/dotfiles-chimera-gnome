@@ -62,16 +62,14 @@ source $ZDOTDIR/keybindings.zsh
 
 () {
 ## ZSH-specific features
-builtin local command;
-for command in curl; do
-    if (( ${+commands[$command]} )); then
-        alias $command="noglob $command"
-    fi
-done
-builtin local func
-for func in gcm gcma; do
-    if (( ${+functions[$func]} )); then
-        alias $func="noglob $func"
+builtin local -a _noglob; _noglob=(
+    curl apk
+    gcm gcma
+)
+builtin local _x;
+for _x in $_noglob; do
+    if (( ${+commands[$_x]} + ${+functions[$_x]} )); then
+        alias $_x="noglob $_x"
     fi
 done
 }
