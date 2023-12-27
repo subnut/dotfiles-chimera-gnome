@@ -6,9 +6,9 @@ builtin local -a flags
 builtin local -a commands
 
 builtin local cports
-cports=${~${words[1]%/cbuild}}
-pkgs=( ${$(cd $cports; ls */*/template.py;)%/template.py} )
+cports=${~words[1]%/cbuild}; if [[ $cports = cbuild ]]; then cports=.; fi
 archs=( ${${$(cd $cports; ls etc/build_profiles/*.ini;)##*/}%.ini} )
+pkgs=( ${$(cd $cports; ls */*/template.py;)%/template.py} )
 
 builtin local _arch="architecture:($archs)"
 builtin local _dirs="directory:_files -/"
