@@ -80,18 +80,21 @@ commands=(
 )
 
 # See Usage.md
-case "$words[$CURRENT-1]" in
+case "$words[-2]" in
 	(fetch|extract|prepare);&
 	(patch|configure|build);&
 	(check|install|pkg);&
 	(lint|cycle-check)
-		_arguments -s -S "2:packages:($pkgs)"
+		_arguments -s -S $flags \
+			"1:commands:(($commands))" \
+			"2:packages:($pkgs)"
 		return;;
 	(relink-subpkgs)
-		_arguments -s -S "2:arguments:(prune $pkgs)"
+		_arguments -s -S $flags \
+			"1:commands:(($commands))" \
+			"2:arguments:(prune $pkgs)"
 		return;;
 esac
-
 
 _arguments -s -S $flags \
 	"1:commands:(($commands))"
