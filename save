@@ -16,6 +16,7 @@ main() {
 		~/.zshrc
 		~/.config/lf
 		~/.config/git
+		~/.config/wezterm
 
 	EOF
 }
