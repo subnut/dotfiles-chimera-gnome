@@ -13,7 +13,7 @@ if wez.gui.get_appearance():find 'Light'
 end
 cfg.force_reverse_video_cursor = false
 
-cfg.enable_scroll_bar = true
+cfg.enable_scroll_bar = false
 cfg.use_fancy_tab_bar = false
 cfg.tab_bar_at_bottom = true
 cfg.window_decorations = 'RESIZE|INTEGRATED_BUTTONS'
@@ -24,8 +24,8 @@ cfg.hide_mouse_cursor_when_typing = false
 cfg.window_padding = {
   left = 2,
   right = 2,
-  top = 0,
-  bottom = 0,
+  top = 2,
+  bottom = 2,
 }
 
 cfg.term = "wezterm"
@@ -33,63 +33,123 @@ cfg.set_environment_variables = {
   TERMINFO_DIRS = "/home/chimera/.local/share/terminfo"
 }
 
--- cfg.font_size = 14.5
--- cfg.cell_width = 0.85
--- cfg.font = wez.font{
---   family = 'Monaspace Neon',
---   harfbuzz_features = {"dlig", "calt"}
--- }
 
--- cfg.font_size = 15
--- cfg.cell_width = 0.85
--- cfg.line_height = 0.9
--- cfg.font = wez.font{
---   family = "IBM Plex Mono",
---   harfbuzz_features = {"ss06"} -- #
--- }
+local ffidx = 2 --[[
 
--- cfg.font_size = 14
--- cfg.font = wez.font{
---   family = 'Recursive Mono Casual Static',
---   harfbuzz_features = {"dlig"}
--- }
+  1 - Monaspace Neon + Radon
+  2 - MonoLisa Plus
+  3 - IBM Plex Mono
+  4 - Dank Mono
+  5 - Victor Mono (DemiBold)
+  6 - Recursive Mono (Casual)
+  7 - Iosevka SS15 (extended)
+  8 - Monaspace Neon
 
--- cfg.font_size = 17
--- cfg.cell_width = 0.85
--- cfg.line_height = 1.05
--- cfg.font = wez.font'Dank Mono'
+--]]
+local fftbl =
+{
+  [2] =
+  function()
+    cfg.font_size = 14
+    cfg.line_height = 0.95
+    cfg.cell_width = 0.8
+    cfg.font = wez.font{
+      family = 'MonoLisa',
+      harfbuzz_features = {"dlig", "calt"}
+    }
+  end,
 
--- cfg.font_size = 15
--- cfg.cell_width = 0.9
--- cfg.line_height = 0.9
--- cfg.font = wez.font{
---   family = "Iosevka SS15 Extended",
---   harfbuzz_features = {"dlig"}
--- }
+  [3] =
+  function()
+    cfg.font_size = 15
+    cfg.cell_width = 0.8
+    cfg.line_height = 0.95
+    cfg.font = wez.font{
+      family = "IBM Plex Mono",
+      harfbuzz_features = {"ss06"} -- #
+    }
+  end,
 
-cfg.font_size = 14
-cfg.cell_width = 0.9
-cfg.harfbuzz_features = {'calt', 'dlig'}
-cfg.font_rules = {
-  { italic = false, intensity = 'Normal',
-    font = wez.font'Monaspace Neon',
-  },
-  { italic = true, intensity = 'Normal',
-    font = wez.font'Monaspace Radon',
-  },
-  { italic = false, intensity = 'Bold',
-    font = wez.font {
+  [4] =
+  function()
+    cfg.font_size = 17
+    cfg.cell_width = 0.85
+    cfg.line_height = 1.1
+    cfg.font = wez.font'Dank Mono'
+  end,
+
+  [5] =
+  function()
+    cfg.font_size = 14
+    cfg.line_height = 0.9
+    cfg.font = wez.font{
+      family = "Victor Mono",
+      weight = "DemiBold"
+    }
+  end,
+
+  [6] =
+  function()
+    cfg.font_size = 14
+    cfg.font = wez.font{
+      family = 'Recursive Mono Casual Static',
+      harfbuzz_features = {"dlig"}
+    }
+  end,
+
+  [7] =
+  function()
+    cfg.font_size = 15
+    cfg.cell_width = 0.9
+    cfg.line_height = 0.9
+    cfg.font = wez.font{
+      family = "Iosevka SS15 Extended",
+      harfbuzz_features = {"dlig"}
+    }
+  end,
+
+  [8] =
+  function()
+    cfg.font_size = 14.5
+    cfg.cell_width = 0.85
+    cfg.font = wez.font{
       family = 'Monaspace Neon',
-      weight = 'Bold',
-    },
-  },
-  { italic = true, intensity = 'Bold',
-    font = wez.font {
-      family = 'Monaspace Radon',
-      weight = 'Bold',
-    },
-  },
+      harfbuzz_features = {"dlig", "calt"}
+    }
+  end,
+
+  [1] =
+  function()
+    cfg.font_size = 14
+    cfg.cell_width = 0.9
+    cfg.harfbuzz_features = {'calt', 'dlig'}
+    cfg.font_rules = {
+      {
+        intensity = 'Normal', italic = false,
+        font = wez.font'Monaspace Neon',
+      },
+      {
+        intensity = 'Normal', italic = true,
+        font = wez.font'Monaspace Radon',
+      },
+      {
+        intensity = 'Bold', italic = false,
+        font = wez.font {
+          family = 'Monaspace Neon',
+          weight = 'Bold',
+        }
+      },
+      {
+        intensity = 'Bold', italic = true,
+        font = wez.font {
+          family = 'Monaspace Radon',
+          weight = 'Bold',
+        }
+      },
+    }
+  end,
 }
+fftbl[ffidx]()
 
 return cfg
 -- vim: et ts=2 sts=2 sw=2
