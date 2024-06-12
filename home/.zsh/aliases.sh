@@ -1,5 +1,6 @@
 alias shrug="printf %s '¯\_(ツ)_/¯'"
 alias exists='command -v >/dev/null'
+alias py=python3
 alias vim=nvim
 
 
