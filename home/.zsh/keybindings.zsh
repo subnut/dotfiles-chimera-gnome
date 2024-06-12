@@ -30,6 +30,8 @@ bindkey -N mymap
 bindkey -A mymap main
 bindkey -R "\x00"-"\xFF" self-insert
 
+## Common typos
+bindkey -s "^ " " "
 
 ## Bind keys
 zmodload zsh/terminfo
