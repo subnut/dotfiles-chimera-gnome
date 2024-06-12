@@ -1,3 +1,7 @@
+# vim: sw=0 ts=4 sts=4 et
+typeset -gA _tpcfg
+_tpcfg[venv]=1
+
 ## We need to run commands inside our prompts
 setopt PROMPT_SUBST
 
@@ -35,6 +39,7 @@ TRANSIENT_PROMPT=
 TRANSIENT_PROMPT+='%B'
 TRANSIENT_PROMPT+='[%~]%(!.#.) '
 TRANSIENT_PROMPT+='%b'
+TRANSIENT_PROMPT+='$(prompt_exec ${_tphfn[venv]} R)'
 
 # TRANSIENT_PROMPT='%(!.#.$) '
 
@@ -55,6 +60,7 @@ function set_prompt {
     PROMPT=${PROMPT}'%B'
     PROMPT=${PROMPT}'%~'
     PROMPT=${PROMPT}'%b'
+    PROMPT=${PROMPT}'$(prompt_exec ${_tphfn[venv]} L)'
     PROMPT=${PROMPT}'$(prompt_exec echoti hpa $((COLUMNS)))'
     PROMPT=${PROMPT}'%(?..$(prompt_exec echoti cub ${#?})%B%F{'${prompt_colors[red]}'}%?%f%b)'
     PROMPT=${PROMPT}$'\n'
@@ -222,5 +228,18 @@ function _transient_prompt_precmd {
     }
 }
 
+### helper functions for extensibility purposes ###
+typeset -gA _tphfn
 
-# vim: sw=0 ts=4 sts=4 et
+### python venv ###
+# Takes one optional argument -
+#   If the argument contains 0, then output isn't colorized
+#   The output is left-padded by the number of L/l in the argument
+#   The output is right-padded by the number of R/r in the argument
+function _transient_prompt_helper_venv {
+    (( ${_tpcfg[venv]} )) || return 0
+    (( ${#VIRTUAL_ENV} )) || return 0
+    local out="($(basename $VIRTUAL_ENV))"
+    test ! 0 = "${1//[^0-9]/}" && out="%F{${prompt_colors[grey]}}${out}%f"
+    printf %${#1//[^lL]/}s; printf %s "$out"; printf %${#1//[^rR]/}s;
+}; _tphfn[venv]=_transient_prompt_helper_venv
