@@ -44,6 +44,12 @@ precmd_functions+=title_precmd
 preexec_functions+=title_preexec
 
 
+## Set terminal working directory
+typeset -ga chpwd_functions
+function term_chpwd { printf "\e]7;%s\a" "file://localhost$PWD" }
+chpwd_functions+=term_chpwd
+
+
 ## Terminal compatibility/tweaks
 (( ${+commands[stty]} )) && {
     <>$TTY stty -echo                   # Don't echo keypresses while zsh is starting
