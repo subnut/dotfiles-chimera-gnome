@@ -62,15 +62,15 @@ chpwd_functions+=term_chpwd
 source $ZDOTDIR/env.sh
 source $ZDOTDIR/prompt.zsh
 source $ZDOTDIR/aliases.sh
+source $ZDOTDIR/keybinds.zsh
 source $ZDOTDIR/hashdirs.zsh
-source $ZDOTDIR/keybindings.zsh
 
 
 () {
 ## ZSH-specific features
 builtin local -a _noglob; _noglob=(
-    curl apk
-    gcm gcma
+    curl apk    # commands
+    gcm gcma    # aliases
 )
 builtin local _x;
 for _x in $_noglob; do
