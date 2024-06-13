@@ -23,4 +23,22 @@ tr '\n' ' ' <<-EOF
 	--preview-window right:60%:hidden:wrap
 EOF`
 
+
+## Add ~/.local/share/man to MANPATH
+# - Check if the directory even exists
+# - Check if MANPATH already contains it
+# - Set MANPATH accordingly
+[ ! -d "$HOME/.local/share/man" ] || {
+    [ ! -z "$MANPATH" ] && {
+        echo ":$MANPATH:" | grep -Fq ":$HOME/.local/share/man:" ||
+        export MANPATH="$HOME/.local/share/man:$MANPATH"
+        true  # just in case
+    };} ||
+export MANPATH="$HOME/.local/share/man"`
+    grep ^manpath /etc/man.conf |
+    while read -r _ path; do
+        printf :%s "$path"
+    done`
+
+
 # vim: et sw=4 sts=4 ts=4 ft=sh nowrap
