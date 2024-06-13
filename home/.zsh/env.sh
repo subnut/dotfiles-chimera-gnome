@@ -14,12 +14,13 @@ export GOPATH=$HOME/.cache/gocache
 export BAT_THEME=ansi
 export MOZ_WEBRENDER=1
 export MOZ_ACCELERATED=1
-export FZF_DEFAULT_OPTS="\
-	--ansi \
-	--margin 1,2 \
-	--color=light \
-	--bind ctrl-v:toggle-preview \
-	--preview-window 'right:60%:hidden:wrap' \
-"
+export FZF_DEFAULT_OPTS=`
+tr '\n' ' ' <<-EOF
+	--ansi
+	--margin 1,2
+	--color light
+	--bind ctrl-v:toggle-preview
+	--preview-window right:60%:hidden:wrap
+EOF`
 
 # vim: et sw=4 sts=4 ts=4 ft=sh nowrap
