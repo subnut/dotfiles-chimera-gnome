@@ -4,6 +4,7 @@ local cfg = {}
 local colorschemes = {
   onehalf = {'OneHalfLight',  'OneHalfDark'},
   iceberg = {'iceberg-light', 'iceberg-dark'},
+  gruvbox = {'GruvboxLight',  'GruvboxDarkHard'}
 }
 
 local colorscheme = colorschemes.iceberg
@@ -151,5 +152,19 @@ local fftbl =
 }
 fftbl[ffidx]()
 
-return cfg
+
+-- Maximize all displayed windows on startup
+-- https://wezfurlong.org/wezterm/config/lua/gui-events/gui-attached.html
+wez.on('gui-attached',
+  function(domain)
+    local workspace = wez.mux.get_active_workspace()
+    for _, window in ipairs(wez.mux.all_windows()) do
+      if window:get_workspace() == workspace then
+        window:gui_window():maximize()
+      end
+    end
+  end
+)
+
 -- vim: et ts=2 sts=2 sw=2
+return cfg
