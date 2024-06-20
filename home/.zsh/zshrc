@@ -89,3 +89,7 @@ zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*:messages' format %B%d%b
 autoload -Uz compinit
 compinit
+
+
+## Custom functions
+source $ZDOTDIR/functions/*

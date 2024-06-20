@@ -1,0 +1,15 @@
+# vim: ft=zsh et sw=0 ts=4 sts=4 sw=4
+
+tssh() {
+    local N=0
+    (( # )) || {
+        ssh; return $?;
+    }
+    (( # > 1 )) &&
+        [[ ${@[$#]} = 0${@[$#]#0} ]] &&
+        N=${@[$#]} && set -- "${@[0,$(( # - 1 ))]}"
+
+    ssh -t "$@" tmux new -As$N
+}
+
+compdef tssh=ssh
