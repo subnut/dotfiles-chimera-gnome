@@ -5,10 +5,12 @@ echo ":$PATH:" | grep -Fq ":$HOME/.local/bin:" ||
     export PATH=$HOME/.local/bin:$PATH
 
 
-export EDITOR=nvim
+export EDITOR=vim
 export DIFFPROG='nvim -d'
 export LESS='-i -R -#.3'
 
+[ "$TERM" = wezterm ] &&
+    export EDITOR=nvim
 
 export GOPATH=$HOME/.cache/gocache
 export BAT_THEME=ansi

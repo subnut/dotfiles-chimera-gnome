@@ -4,8 +4,9 @@ main() {
 	rm -rf root
 	rm -rf home
 
-	{ sed "/^$/d;/^~\\//s|~|$HOME|" | while read FILE
-	do [ ${#FILE} -eq 0 ] || run save "$FILE"
+	{ sed "/^$/d;/^~\\//s|~|$HOME|" | while read FILE; do
+	[ ${#FILE} -gt 0 ] && [ "$FILE" != "#${FILE###}" ] &&
+		run save "$FILE"
 	done } <<-EOF
 
 		/etc/profile.d/xdg.sh
@@ -17,6 +18,11 @@ main() {
 		~/.config/lf
 		~/.config/git
 		~/.config/wezterm
+
+		# copy all regular files under ~/.local/bin
+		# those are likely the ones I made myself
+		# symlinks are mostly made by pipx etc.
+		$(find ~/.local/bin -type f)
 
 	EOF
 }

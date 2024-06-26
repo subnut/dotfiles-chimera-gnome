@@ -1,0 +1,3 @@
+#!/bin/sh
+test -x /usr/bin/vim  &&  exec /usr/bin/vim "$@"
+exec nvim +'set notermguicolors | colo vim' "$@"
