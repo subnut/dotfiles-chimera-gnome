@@ -65,6 +65,7 @@ bindkey '^[[200~' bracketed-paste
 # bindkey '^F'
 bindkey '^G'  send-break            # zsh default
 bindkey '^H'  backward-delete-char  # BS  (Backspace)
+bindkey '^?'  backward-delete-char  # BS  (Backspace)
 bindkey '^I'  expand-or-complete    # HT  (Horizontal Tab)
 bindkey '^J'  accept-line           # LF  (Line feed)
 bindkey '^K'  kill-line             # zsh default
