@@ -167,5 +167,12 @@ wez.on('gui-attached',
   end
 )
 
--- vim: et ts=2 sts=2 sw=2
+local success, stdout, stderr = wez.run_child_process{
+  "gsettings", "get", "org.gnome.desktop.interface", "cursor-theme"
+}
+if success then
+  cfg.xcursor_theme = stdout:gsub("'(.+)'\n", "%1")
+end
+
 return cfg
+-- vim: et ts=2 sts=2 sw=2
