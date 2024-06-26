@@ -18,7 +18,9 @@ fd
 firefox-wayland
 firmware-linux
 firmware-linux-soc
-firmware-wifi
+fonts-nerd-symbols-only
+fonts-noto-otf
+fonts-noto-serif-cjk-otf
 fonts-twemoji-ttf
 fzf
 gdb
