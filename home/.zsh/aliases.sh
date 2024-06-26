@@ -20,13 +20,15 @@ alias ls.='ls -dAF .*'
 
 
 exists rg && {
-    alias rgl='rg -l'
-    alias rg='rg -. --no-heading --smart-case'
+    alias rg='rg -. --smart-case'
     alias rgs='rg -s'   # case-sensitive
     alias rgi='rg -i'   # case-insensitive
-    alias rgh='rg --heading'
+    alias rgh='rg --no-heading'
     alias rghs='rgh -s' # case-sensitive
     alias rghi='rgh -i' # case-insensitive
+    alias rgl='rg -l'
+    alias rgls='rg -l' 	# case-sensitive
+    alias rgli='rg -l' 	# case-insensitive
 }
 
 
