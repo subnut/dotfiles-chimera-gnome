@@ -24,10 +24,10 @@ cfg.hide_tab_bar_if_only_one_tab = true
 cfg.hide_mouse_cursor_when_typing = false
 
 cfg.window_padding = {
-  left = 2,
-  right = 2,
-  top = 2,
-  bottom = 2,
+  left = 3,
+  right = 3,
+  top = 3,
+  bottom = 3,
 }
 
 cfg.term = "wezterm"
@@ -53,7 +53,7 @@ local fftbl =
   [2] =
   function()
     cfg.font_size = 14
-    cfg.line_height = 0.95
+    cfg.line_height = 1
     cfg.cell_width = 0.8
     cfg.font = wez.font{
       family = 'MonoLisa',
