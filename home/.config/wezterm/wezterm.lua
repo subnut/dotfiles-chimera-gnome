@@ -2,12 +2,13 @@ local wez = require 'wezterm'
 local cfg = {}
 
 local colorschemes = {
+  edge    = {'Edge Light',    'Edge Dark',},
   onehalf = {'OneHalfLight',  'OneHalfDark'},
   iceberg = {'iceberg-light', 'iceberg-dark'},
-  gruvbox = {'GruvboxLight',  'GruvboxDarkHard'}
+  gruvbox = {'GruvboxLight',  'GruvboxDarkHard'},
 }
 
-local colorscheme = colorschemes.iceberg
+local colorscheme = colorschemes.edge
 if wez.gui.get_appearance():find 'Light'
   then cfg.color_scheme = colorscheme[1]
   else cfg.color_scheme = colorscheme[2]
