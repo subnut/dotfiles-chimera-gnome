@@ -1,12 +1,12 @@
 
 [colors]
+cursor_bg = "#595e69"
 background = "#fafafa"
 selection_fg = "#fafafa"
-cursor_fg = "#e8ebf0"
+cursor_fg = "#fafafa"
+cursor_border = "#fafafa"
 foreground = "#4b505b"
 selection_bg = "#4b505b"
-cursor_bg = "#4b505b"
-cursor_border = "#4b505b"
 ansi = [
     "#595e69",
     "#d05858",
