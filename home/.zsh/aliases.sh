@@ -82,3 +82,4 @@ exists git && {
 
 exists ncdu && alias ncdu='ncdu --color off' || true
 exists bat && alias batp='bat --style=header-filename' || true
+exists fd && alias fd='LS_COLORS= fd' || true
