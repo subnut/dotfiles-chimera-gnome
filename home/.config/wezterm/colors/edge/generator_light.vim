@@ -10,25 +10,25 @@ let s:palette.bg_cyan = s:dpalette.cyan
 let s:palette = foreach(s:palette,
       \"let s:palette[v:key] = v:val[0]")
 
-let s:map1 = split("red green yellow blue purple cyan grey_dim")
-let s:map2 = ["grey"] + map(s:map1[0:-2], '"bg_" .. v:val') + ["bg4"]
-let s:black_dim = "#595e69"
+let s:palette.black_dim = "#595e69"
+let s:palette.black_dark = "#404550"
+let s:map1 = split("bg_grey red green yellow blue purple cyan black_dark")
+let s:map2 = ["bg_grey"] + map(s:map1[1:-2], '"bg_" .. v:val') + ["black_dim"]
 
 lcd <sfile>:h
 redir! > EdgeLight.toml
 echo '[colors]'
 
-echo 'cursor_bg = "' .. s:black_dim .. '"'
-for s:x in split("background selection_fg"
-      \.. " cursor_fg cursor_border")
+for s:x in split("background selection_fg")
   echo s:x .. ' = "' .. s:palette.bg0 .. '"'
 endfor
-for s:x in split("foreground selection_bg")
+echo 'cursor_fg = "' .. s:palette.bg2 .. '"'
+for s:x in split("foreground selection_bg"
+      \ .. " cursor_bg cursor_border")
   echo s:x .. ' = "' .. s:palette.fg .. '"'
 endfor
 
 echo 'ansi = ['
-echo '    "'.. s:black_dim ..'",'
 for s:x in s:map1
   echo '    "' .. s:palette[s:x] .. '",'
 endfor

@@ -16,10 +16,10 @@ for s:name in split("red green yellow blue purple cyan")
   let s:palette[s:name] = s:lpalette[s:name]
 endfor
 let s:palette.purple = s:lpalette.bg_purple
+let s:palette.grey = s:lpalette.bg_grey
 
-let s:map1 = split("bg1 red green yellow blue purple cyan grey")
-let s:map2 = split("red green yellow blue purple cyan grey")
-let s:map2 = ["bg3"] + map(s:map2, '"bg_" .. v:val')
+let s:map1 = split("black red green yellow blue purple cyan grey")
+let s:map2 = ["bg4"] + map(s:map1[1:-1], '"bg_" .. v:val')
 
 lcd <sfile>:h
 redir! > EdgeDark.toml
