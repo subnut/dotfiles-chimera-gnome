@@ -6,6 +6,10 @@ local colorschemes = {
   onehalf = {'OneHalfLight',  'OneHalfDark'},
   iceberg = {'iceberg-light', 'iceberg-dark'},
   gruvbox = {'GruvboxLight',  'GruvboxDarkHard'},
+  catppuccin = {
+    "Catppuccin Latte",
+    "Catppuccin Mocha",
+  },
 }
 
 local colorscheme = colorschemes.edge
