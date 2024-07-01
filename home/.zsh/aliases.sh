@@ -3,8 +3,6 @@ alias exists='command -v >/dev/null'
 alias vim="nvim +'set notermguicolors|colo vim'"
 alias py=python3
 
-alias sshtmux
-
 
 ## Check --color support in `ls`
 # NOTE: Should come *after* we've added ~/.local/bin to PATH
