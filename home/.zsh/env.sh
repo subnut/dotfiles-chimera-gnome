@@ -12,6 +12,7 @@ export LESS='-i -R -#.3'
 [ "$TERM" = wezterm ] &&
     export EDITOR=nvim
 
+
 export GOPATH=$HOME/.cache/gocache
 export BAT_THEME=ansi
 export MOZ_WEBRENDER=1
