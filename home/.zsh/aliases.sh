@@ -1,6 +1,5 @@
 alias shrug="printf %s '¯\_(ツ)_/¯'"
 alias exists='command -v >/dev/null'
-alias vim="nvim +'set notermguicolors|colo vim'"
 alias py=python3
 
 

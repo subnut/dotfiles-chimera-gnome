@@ -25,6 +25,15 @@ main() {
 		# symlinks are mostly made by pipx etc.
 		$(find ~/.local/bin -type f)
 
+		# copy all symlinks under ~/.local/bin that
+		# links to a file under /usr/bin or /bin
+		#
+		# NOTE: -lname is a GNU extension of find
+		# TODO: Find a POSIX-compatible way
+		$(find ~/.local/bin -type l	\
+			'(' -lname "/usr/bin/*"	\
+			-or -lname "/bin/*" ')'	)
+
 	EOF
 }
 
