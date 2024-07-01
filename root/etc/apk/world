@@ -1,6 +1,7 @@
 base-desktop
 base-full
 bat
+bind-progs
 bmake
 catgirl
 chimera-repo-contrib
@@ -26,11 +27,13 @@ fzf
 gdb
 git
 git-absorb
+git-lfs
 gnome-tweaks
 htop
 jq
 lf
 linux-stable
+linux-stable-devel
 linux-stable-zfs-bin
 lldb
 lsof
@@ -52,7 +55,9 @@ strace
 tlp
 tmux
 tree
+v4l2loopback-ckms
 valgrind
+wl-clipboard
 xorriso
 zfs
 zsh
