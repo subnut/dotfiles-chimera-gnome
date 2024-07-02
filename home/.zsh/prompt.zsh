@@ -1,72 +1,66 @@
-# vim: sw=0 ts=4 sts=4 et
-typeset -gA _tpcfg
-_tpcfg[venv]=1
-
 ## We need to run commands inside our prompts
 setopt PROMPT_SUBST
 
-## Helper function to allow running commands inside $PROMPT without changing $?
-function prompt_exec {
-    local exitcode=$?
-    "$@"
-    return $exitcode
-}
-
-## Helper function to print something with prompt expansion
-function prompt_print {
-    print -n -- "${(%)*}"
-}
 
 ## Array of colors to use in prompts
-typeset -gA prompt_colors
-if [[ ${terminfo[colors]} -eq 256 ]]; then
-    prompt_colors[red]=196
-    prompt_colors[grey]=244
-    prompt_colors[green]=34
-else
-    prompt_colors[red]=1
-    prompt_colors[grey]=7
-    prompt_colors[green]=2
+typeset -gA _tp_color
+if [[ ${terminfo[colors]} -gt 8 ]]
+then # At least 16-bit
+    _tp_color[red]=9
+    _tp_color[grey]=8
+    _tp_color[green]=10
+else # Limited to 8-bit
+    _tp_color[red]=1
+    _tp_color[grey]=7
+    _tp_color[green]=2
 fi
 
-# TRANSIENT_PROMPT=
-# TRANSIENT_PROMPT+="%F{${prompt_colors[grey]}}"
-# TRANSIENT_PROMPT+='%(!.#.$)'
-# TRANSIENT_PROMPT+='%f'
-# TRANSIENT_PROMPT+=' '
-
-TRANSIENT_PROMPT=
-TRANSIENT_PROMPT+='%B'
-TRANSIENT_PROMPT+='[%~]%(!.#.) '
-TRANSIENT_PROMPT+='%b'
-TRANSIENT_PROMPT+='$(prompt_exec ${_tphfn[venv]} R)'
-
-# TRANSIENT_PROMPT='%(!.#.$) '
-
-_PROMPT_PROMPT=
-_PROMPT_PROMPT+='%B'
-_PROMPT_PROMPT+='%(?.%F{'${prompt_colors[green]}'}.%F{'${prompt_colors[red]}'})'
-_PROMPT_PROMPT+='%(!.#.$)'
-_PROMPT_PROMPT+='%f'
-_PROMPT_PROMPT+='%b'
-_PROMPT_PROMPT+=' '
-
-# _PROMPT_PROMPT='%F{'$${prompt_colors[grey]}'}$%f'
-# _PROMPT_PROMPT='%B%(?.%F{green}.%F{red})%(!.#.$)%f%b'
+# Grey is sometimes nigh invisible in some colorschemes
+# So, if 256-colors is available, use 244 instead
+if [[ ${terminfo[colors]} -eq 256 ]]; then
+    _tp_color[grey]=244
+fi
 
 
-function set_prompt {
-    PROMPT=
-    PROMPT=${PROMPT}'%B'
-    PROMPT=${PROMPT}'%~'
-    PROMPT=${PROMPT}'%b'
-    PROMPT=${PROMPT}'$(prompt_exec ${_tphfn[venv]} L)'
-    PROMPT=${PROMPT}'$(prompt_exec echoti hpa $((COLUMNS)))'
-    PROMPT=${PROMPT}'%(?..$(prompt_exec echoti cub ${#?})%B%F{'${prompt_colors[red]}'}%?%f%b)'
-    PROMPT=${PROMPT}$'\n'
-    PROMPT=${PROMPT}${_PROMPT_PROMPT}
-}
-set_prompt
+## Helper functions
+# _tp_exec   - to run commands inside $PROMPT without changing $?
+# _tp_expand - to print something with prompt expansion
+function _tp_exec { local exitcode=$?; "$@"; return $exitcode }
+function _tp_expand { print -n -- "${(%)*}" }
+
+
+## The prompt that's shown for commands have have been executed
+## ie. the prompt that's gonna show up in your scrollback buffer
+## ie. the "permanent" prompt
+_TP_PERM_PROMPT=
+_TP_PERM_PROMPT+='%B'
+_TP_PERM_PROMPT+='[%~]%(!. #.) '
+_TP_PERM_PROMPT+='%b'
+_TP_PERM_PROMPT+='$(_tp_exec __tphfn__venv grey R)'
+
+## The "transient" prompt
+## ie. the prompt that's shown until the command is executed
+_TP_TRAN_PROMPT=
+_TP_TRAN_PROMPT+='$(_tp_exec __tphfn__ssh grey R)'
+_TP_TRAN_PROMPT+='%B'
+_TP_TRAN_PROMPT+='%~'
+_TP_TRAN_PROMPT+='%b'
+_TP_TRAN_PROMPT+='$(_tp_exec __tphfn__venv grey L)'
+_TP_TRAN_PROMPT+='$(_tp_exec echoti hpa $((COLUMNS)))'
+_TP_TRAN_PROMPT+='%(?..$(_tp_exec echoti cub ${#?})%B%F{'${_tp_color[red]}'}%?%f%b)'
+
+## The "main" prompt
+## ie. the stuff that's gonna show on the same line as the command that'll be executed
+_TP_MAIN_PROMPT=
+_TP_MAIN_PROMPT+='%B'
+_TP_MAIN_PROMPT+='%(?.%F{'${_tp_color[green]}'}.%F{'${_tp_color[red]}'})'
+_TP_MAIN_PROMPT+='%(!.#.$)'
+_TP_MAIN_PROMPT+='%f'
+_TP_MAIN_PROMPT+='%b'
+_TP_MAIN_PROMPT+=' '
+
+# _TP_MAIN_PROMPT='%F{'$${_tp_color[grey]}'}$%f'
+# _TP_MAIN_PROMPT='%B%(?.%F{green}.%F{red})%(!.#.$)%f%b'
 
 
 ## Show execution time in RPROMPT
@@ -90,7 +84,7 @@ function _exectime {
             [[ $(( sec /= 60 )) -gt 0 ]] && RPROMPT="$(( sec % 24 ))h $RPROMPT"     # hours
             [[ $(( sec /= 60 )) -gt 0 ]] && RPROMPT="$(( sec % 24 ))d $RPROMPT"     # days
         fi
-        RPROMPT="%F{${prompt_colors[grey]}}$RPROMPT"
+        RPROMPT="%F{${_tp_color[grey]}}$RPROMPT"
     }
 }
 function _exectime_preexec { _epochtime_preexec=($epochtime $EPOCHREALTIME)  }
@@ -102,7 +96,7 @@ precmd_functions+=_exectime
 
 ## Show warning if buffer empty
 EMPTY_BUFFER_WARNING_TEXT='Buffer empty!'
-EMPTY_BUFFER_WARNING_COLOR=${prompt_colors[red]}
+EMPTY_BUFFER_WARNING_COLOR=${_tp_color[red]}
 zle -N accept-line
 function accept-line {
     if [[ $#BUFFER -ne 0 ]]
@@ -110,12 +104,12 @@ function accept-line {
     else
         echoti cud1
         # The next two lines MUST NOT BE INTERCHANGED
-        prompt_print "${_PROMPT_PROMPT}"
+        _tp_expand "${_TP_MAIN_PROMPT}"
         echoti cuu1
         echoti sc
         echoti cud 1
         echoti hpa 0
-        prompt_print "%F{$EMPTY_BUFFER_WARNING_COLOR}"$EMPTY_BUFFER_WARNING_TEXT'%f'
+        _tp_expand "%F{$EMPTY_BUFFER_WARNING_COLOR}"$EMPTY_BUFFER_WARNING_TEXT'%f'
         echoti ed
         echoti rc
         # For the meaning of cud1,ed,hpa,... see terminfo(5)
@@ -143,6 +137,84 @@ function accept-line {
 }
 
 
+## Transient prompt
+[[ -c /dev/null ]]  || return 0
+zmodload zsh/system || return 0
+
+typeset -g __tp_newline=
+function __tp_setprompt {
+    PROMPT='$__tp_newline'
+    PROMPT+=${_TP_TRAN_PROMPT}
+    PROMPT+=$'\n'${_TP_MAIN_PROMPT} 
+}; __tp_setprompt
+
+zle -N send-break       __tp_wid_send-break
+zle -N clear-screen     __tp_wid_clear-screen
+zle -N zle-line-finish  __tp_wid_zle-line-finish
+
+function __tp_wid_send-break { __tp_wid_zle-line-finish; zle .send-break; }
+function __tp_wid_clear-screen { __tp_newline=; zle .clear-screen; }
+function __tp_wid_zle-line-finish {
+    (( ! __tp_promptfd )) && {
+        sysopen -r -o cloexec -u __tp_promptfd /dev/null
+        zle -F $__tp_promptfd __tp_restore_prompt
+    }; zle && PROMPT=$_TP_PERM_PROMPT RPROMPT= zle reset-prompt && zle -R
+}
+
+function __tp_restore_prompt {
+    exec {1}>&-
+    (( ${+1} )) && zle -F $1
+    __tp_promptfd=0
+    __tp_setprompt
+    zle reset-prompt
+    zle -R
+}
+
+(( ${+precmd_functions} )) || typeset -ga precmd_functions
+(( ${#precmd_functions} )) || {
+    precmd_functions=(do_nothing)
+    do_nothing() {true}
+}
+
+precmd_functions+=__tp_precmd
+function __tp_precmd {
+    # We define __tp_precmd in this way because we don't want
+    # __tp_newline to be defined on the very first precmd.
+    TRAPINT() {zle && __tp_wid_zle-line-finish; return $(( 128 + $1 ))}
+    function __tp_precmd {
+        TRAPINT() {zle && __tp_wid_zle-line-finish; return $(( 128 + $1 ))}
+        __tp_newline=$'\n'
+    }
+}
+
+### helper functions for extensibility purposes ###
+function __tphfp {
+    # Takes three arguments -
+    #   1. The text to print
+    #   2. The color to print it in
+    #   3. [OPTIONAL] Formatting options
+    #
+    # The optional argument -
+    #   If the argument contains 0, then output isn't colorized
+    #   The output is left-padded by the number of L/l in the argument
+    #   The output is right-padded by the number of R/r in the argument
+    local out="$1" col="$2" opt="$3"
+    test ! 0 = "${opt//[^0-9]/}" && out="%F{${_tp_color[$col]}}${out}%f"
+    printf %${#opt//[^lL]/}s; printf %s "$out"; printf %${#opt//[^rR]/}s;
+}
+
+### python venv ###
+function __tphfn__venv {
+    (( ${+VIRTUAL_ENV} )) || return 0
+    __tphfp "($(basename $VIRTUAL_ENV))" "$@"
+};
+
+### ssh ###
+function __tphfn__ssh {
+    (( ${+SSH_CONNECTION} )) || return 0
+    __tphfp "%n@%m" "$@"
+};
+
 
 ## Show vi mode
 #function _vi_mode_show_mode {
@@ -150,7 +222,7 @@ function accept-line {
 #    echoti cud 1
 #    echoti hpa 0
 #    echoti el
-#    (( ${#1} )) && prompt_print '%B'$1'%b'
+#    (( ${#1} )) && _tp_expand '%B'$1'%b'
 #    echoti rc
 #}
 #
@@ -171,75 +243,4 @@ function accept-line {
 #add-zle-hook-widget {,_vi_mode-zle-}keymap-select
 
 
-## Transient prompt
-[[ -c /dev/null ]]  || return 0
-zmodload zsh/system || return 0
-
-typeset -g _transient_prompt_newline=
-function _transient_prompt_set_prompt {
-    set_prompt
-    PROMPT='$_transient_prompt_newline'$PROMPT
-}; _transient_prompt_set_prompt
-
-zle -N clear-screen _transient_prompt_widget-clear-screen
-function _transient_prompt_widget-clear-screen {
-    _transient_prompt_newline=
-    zle .clear-screen
-}
-
-zle -N send-break _transient_prompt_widget-send-break
-function _transient_prompt_widget-send-break {
-    _transient_prompt_widget-zle-line-finish
-    zle .send-break
-}
-
-zle -N zle-line-finish _transient_prompt_widget-zle-line-finish
-function _transient_prompt_widget-zle-line-finish {
-    (( ! _transient_prompt_fd )) && {
-        sysopen -r -o cloexec -u _transient_prompt_fd /dev/null
-        zle -F $_transient_prompt_fd _transient_prompt_restore_prompt
-    }
-    zle && PROMPT=$TRANSIENT_PROMPT RPROMPT= zle reset-prompt && zle -R
-}
-
-function _transient_prompt_restore_prompt {
-    exec {1}>&-
-    (( ${+1} )) && zle -F $1
-    _transient_prompt_fd=0
-    _transient_prompt_set_prompt
-    zle reset-prompt
-    zle -R
-}
-
-(( ${+precmd_functions} )) || typeset -ga precmd_functions
-(( ${#precmd_functions} )) || {
-    do_nothing() {true}
-    precmd_functions=(do_nothing)
-}
-
-precmd_functions+=_transient_prompt_precmd
-function _transient_prompt_precmd {
-    # We define _transient_prompt_precmd in this way because we don't want
-    # _transient_prompt_newline to be defined on the very first precmd.
-    TRAPINT() {zle && _transient_prompt_widget-zle-line-finish; return $(( 128 + $1 ))}
-    function _transient_prompt_precmd {
-        TRAPINT() {zle && _transient_prompt_widget-zle-line-finish; return $(( 128 + $1 ))}
-        _transient_prompt_newline=$'\n'
-    }
-}
-
-### helper functions for extensibility purposes ###
-typeset -gA _tphfn
-
-### python venv ###
-# Takes one optional argument -
-#   If the argument contains 0, then output isn't colorized
-#   The output is left-padded by the number of L/l in the argument
-#   The output is right-padded by the number of R/r in the argument
-function _transient_prompt_helper_venv {
-    (( ${_tpcfg[venv]} )) || return 0
-    (( ${#VIRTUAL_ENV} )) || return 0
-    local out="($(basename $VIRTUAL_ENV))"
-    test ! 0 = "${1//[^0-9]/}" && out="%F{${prompt_colors[grey]}}${out}%f"
-    printf %${#1//[^lL]/}s; printf %s "$out"; printf %${#1//[^rR]/}s;
-}; _tphfn[venv]=_transient_prompt_helper_venv
+# vim: sw=0 ts=4 sts=4 et
