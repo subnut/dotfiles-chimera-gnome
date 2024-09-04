@@ -14,6 +14,7 @@ export LESS='-i -R -#.3'
 
 
 export GOPATH=$HOME/.cache/gocache
+export GREP_COLOR=auto
 export BAT_THEME=ansi
 export MOZ_WEBRENDER=1
 export MOZ_ACCELERATED=1
