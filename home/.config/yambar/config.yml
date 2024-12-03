@@ -1,0 +1,86 @@
+# vim:noet:ts=4:sts=4:sw=4:
+
+spacing: &spacing		6
+half-space: &halfspace	3
+
+bar:
+  height: 26
+  location: top
+  spacing: *spacing
+  background: 222222ff
+  font: Recursive Sn Csl St:pixelsize=18
+
+  left:
+    - i3:
+        sort: native
+        anchors:
+          string: &i3-defaults
+            text: " {name} "
+            on-click:
+              left: "swaymsg --quiet workspace {name}"
+              wheel-up: "swaymsg --quiet workspace prev"
+              wheel-down: "swaymsg --quiet workspace next"
+        content:
+          "":
+            map:
+              default: {string: {foreground: 888888ff, <<: *i3-defaults}}
+              conditions:
+                state == focused: {string: {deco: {background: {color: 285577ff}}, <<: *i3-defaults}}
+          current:  # modes
+            map:
+              default:
+                - empty: {left-margin: *spacing}
+                - string:
+                    margin: 8
+                    text: "{mode}"
+                    deco: {background: {color: aa2222ff}}
+              conditions:
+                mode == default: {empty: {}}
+
+  center:
+    - foreign-toplevel:
+        content:
+          map:
+            conditions:
+              ~activated: {empty: {}}
+              activated:
+                list:
+                  spacing: *halfspace
+                  items:
+                    - string: {text: "{app-id}", foreground: ffa0a0ff}
+                    - string: {text: "–", foreground: 888888ff}
+                    - string: {text: "{title}"}
+    # - i3:
+    #     content:
+    #       "": {empty: {}}
+    #       current:
+    #         list:
+    #           spacing: 4
+    #           items:
+    #             - string:
+    #                 text: "{title}"
+    #             - string:
+    #                 text: "{application}"
+    #                 foreground: 888888ff
+    #                 font: Recursive Sn Csl St:pixelsize=16
+
+  right:
+    - battery:
+        name: BAT0
+        poll-interval: 15000
+        smoothing-secs: 60
+        content:
+          - string:
+              text: "{capacity}% ({estimate})"
+              font: Recursive Sn Csl St:pixelsize=18
+              foreground: 888888ff
+
+    - clock:
+        date-format: "%a, %d %b %Y"
+        content:
+          list:
+            spacing: *spacing
+            items:
+              - string: {text: "{date}", font: Recursive Sn Csl St:pixelsize=18, foreground: ddddddff}
+              - string: {text: "{time}", font: Recursive Sn Csl St:pixelsize=24}
+
