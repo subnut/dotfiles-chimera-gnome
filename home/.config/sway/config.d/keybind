@@ -1,0 +1,246 @@
+# vim:ft=swayconfig:
+
+### Key bindings
+#
+# Misc.:
+#
+bindsym $super+Ctrl+s sticky toggle
+bindsym XF86Display exec sleep 0.5 && pkill -USR1 swayidle
+
+## Implemented in /etc/acpi/handler.sh
+# bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+# bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+# bindsym XF86AudioMute        exec pactl set-sink-mute   @DEFAULT_SINK@   toggle
+# bindsym XF86AudioMicMute     exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+## Don't pass these to clients (applications)
+bindsym XF86AudioLowerVolume nop
+bindsym XF86AudioRaiseVolume nop
+bindsym XF86AudioMute        nop
+bindsym XF86AudioMicMute     nop
+
+## TODO
+bindsym XF86AudioPrev   exec playerctl previous
+bindsym XF86AudioNext   exec playerctl next
+bindsym XF86AudioPlay   exec playerctl play-pause
+bindsym XF86AudioPause  exec playerctl pause
+
+## ThinkPad E14G3
+bindsym XF86Favorites   exec playerctl play-pause
+bindsym XF86PickupPhone exec playerctl previous
+bindsym XF86HangupPhone exec playerctl next
+bindsym Shift+XF86PickupPhone exec playerctld unshift
+bindsym Shift+XF86HangupPhone exec playerctld shift
+bindsym Shift+XF86Favorites   exec playerctl -a pause
+
+#
+# Applications:
+#
+bindsym $super+Ctrl+f exec firefox
+
+#
+# Basics:
+#
+    # Start a terminal
+    bindsym $super+Return exec $term
+
+    # Kill focused window
+    bindsym $super+q kill
+
+    # Start your launcher
+    # bindsym $super+d exec $menu
+    bindsym $super+r exec $menu
+
+    # Start file manager
+    bindsym $super+e exec $filemanager
+
+    # Clipboard
+    bindsym $super+v        exec $clipselect
+    bindsym $super+Shift+v  exec $clipdelete
+
+    # Screenshot
+    bindsym $super+Shift+s exec $screenshot
+
+    # Emoji
+    bindsym $super+semicolon exec $emoji
+
+    # Drag floating windows by holding down $super and left mouse button.
+    # Resize them with right mouse button + $super.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $super normal
+
+    # Reload the configuration file
+    bindsym $super+$alt+r reload
+
+    # Exit sway (logs you out of your Wayland session)
+    bindsym $super+$alt+q exec swaynag -e bottom -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+#
+# Moving around:
+#
+    # ¯\_(ツ)_/¯
+    bindsym $alt+tab focus right
+    bindsym $alt+Shift+tab focus left
+    # bindsym $alt+Shift+tab focus prev
+    # bindsym $alt+tab focus next
+
+    # Move your focus around
+    bindsym $super+$left focus left
+    bindsym $super+$down focus down
+    bindsym $super+$up focus up
+    bindsym $super+$right focus right
+    # Or use $super+[up|down|left|right]
+    bindsym $super+Left focus left
+    bindsym $super+Down focus down
+    bindsym $super+Up focus up
+    bindsym $super+Right focus right
+
+    # Move the focused window with the same, but add Shift
+    bindsym $super+Shift+$left move left
+    bindsym $super+Shift+$down move down
+    bindsym $super+Shift+$up move up
+    bindsym $super+Shift+$right move right
+    # Ditto, with arrow keys
+    bindsym $super+Shift+Left move left
+    bindsym $super+Shift+Down move down
+    bindsym $super+Shift+Up move up
+    bindsym $super+Shift+Right move right
+#
+# Workspaces:
+#
+    # Switch to workspace
+    bindsym $super+Tab workspace next
+    bindsym $super+Shift+Tab workspace prev
+    bindsym $super+Grave workspace back_and_forth
+    bindsym $super+1 workspace number 1
+    bindsym $super+2 workspace number 2
+    bindsym $super+3 workspace number 3
+    bindsym $super+4 workspace number 4
+    bindsym $super+5 workspace number 5
+    bindsym $super+6 workspace number 6
+    bindsym $super+7 workspace number 7
+    bindsym $super+8 workspace number 8
+    bindsym $super+9 workspace number 9
+    bindsym $super+0 workspace number 10
+    # Move focused container to workspace
+    bindsym $super+Shift+Grave move workspace back_and_forth
+    bindsym $super+Shift+1 move container to workspace number 1
+    bindsym $super+Shift+2 move container to workspace number 2
+    bindsym $super+Shift+3 move container to workspace number 3
+    bindsym $super+Shift+4 move container to workspace number 4
+    bindsym $super+Shift+5 move container to workspace number 5
+    bindsym $super+Shift+6 move container to workspace number 6
+    bindsym $super+Shift+7 move container to workspace number 7
+    bindsym $super+Shift+8 move container to workspace number 8
+    bindsym $super+Shift+9 move container to workspace number 9
+    bindsym $super+Shift+0 move container to workspace number 10
+    # Note: workspaces can have any name you want, not just numbers.
+    # We just use 1-10 as the default.
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $super+b or $super+v, for horizontal and vertical splits
+    # respectively.
+    bindsym $super+$alt+$up splitv
+    bindsym $super+$alt+$down splitv
+    bindsym $super+$alt+$left splith
+    bindsym $super+$alt+$right splith
+    bindsym $super+$alt+Up splitv
+    bindsym $super+$alt+Down splitv
+    bindsym $super+$alt+Left splith
+    bindsym $super+$alt+Right splith
+
+    # Set default layout
+    workspace_layout tabbed
+
+    # Switch the current container between different layout styles
+    bindsym $super+t layout tabbed                    # Enter tabbed layout
+    bindsym $super+d layout toggle split              # Enter split layout / Toggle split direction
+    bindsym $super+s layout toggle stacking tabbed    # Cycle between stacking and tabbed modes
+
+    # Make the current focus fullscreen
+    bindsym $super+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    bindsym $super+Shift+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    bindsym $super+space focus mode_toggle
+
+    # Move focus to the parent container
+    bindsym $super+p focus parent
+    bindsym $super+n focus child
+#
+# Scratchpad:
+#
+    # Sway has a "scratchpad", which is a bag of holding for windows.
+    # You can send windows there and get them back later.
+
+    # Move the currently focused window to the scratchpad
+    bindsym $super+Shift+minus move scratchpad
+
+    # Show the next scratchpad window or hide the focused scratchpad window.
+    # If there are multiple scratchpad windows, this command cycles through them.
+    bindsym $super+minus scratchpad show
+#
+# Resizing containers:
+#
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    bindsym Shift+$left resize shrink width 1px
+    bindsym Shift+$down resize grow height 1px
+    bindsym Shift+$up resize shrink height 1px
+    bindsym Shift+$right resize grow width 1px
+
+    # Ditto, with arrow keys
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    bindsym Shift+Left resize shrink width 1px
+    bindsym Shift+Down resize grow height 1px
+    bindsym Shift+Up resize shrink height 1px
+    bindsym Shift+Right resize grow width 1px
+
+    # Return to default mode
+    bindsym q      mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $super+Ctrl+r mode "resize"
+
+
+#
+# Focusing different outputs
+#
+bindsym $super+Ctrl+$left  focus output left
+bindsym $super+Ctrl+$down  focus output down
+bindsym $super+Ctrl+$up    focus output up
+bindsym $super+Ctrl+$right focus output right
+bindsym $super+Ctrl+Left   focus output left
+bindsym $super+Ctrl+Down   focus output down
+bindsym $super+Ctrl+Up     focus output up
+bindsym $super+Ctrl+Right  focus output right
+
+#
+# Moving containers to different outputs
+#
+bindsym $super+Ctrl+Shift+$left  move workspace to output left
+bindsym $super+Ctrl+Shift+$down  move workspace to output down
+bindsym $super+Ctrl+Shift+$up    move workspace to output up
+bindsym $super+Ctrl+Shift+$right move workspace to output right
+bindsym $super+Ctrl+Shift+Left   move workspace to output left
+bindsym $super+Ctrl+Shift+Down   move workspace to output down
+bindsym $super+Ctrl+Shift+Up     move workspace to output up
+bindsym $super+Ctrl+Shift+Right  move workspace to output right

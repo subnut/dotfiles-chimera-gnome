@@ -1,0 +1,36 @@
+### Variables
+set {
+    $super  Mod4
+    $alt    Mod1
+# Home row direction keys, like vim
+    $left   h
+    $down   j
+    $up     k
+    $right  l
+# Your preferred programs
+    $term foot
+    $filemanager nautilus -w
+}
+
+### Cosmetics
+default_border normal 0
+titlebar_padding 5 1
+titlebar_border_thickness 0
+# font monospace 12
+font Recursive Sn Csl St 12
+# font pango:Recursive Sn Csl St 12
+# client.focused #ffdd00 #ffdd00 #000000
+# client.focused_inactive #cc5500 #cc5500 #000000
+# client.unfocused #333333 #222222 #dddddd
+
+### Configuration
+xwayland enable
+focus_wrapping workspace
+
+### Bar
+exec yambar
+
+### Other stuff
+include ./config.d/*
+
+# vim:nowrap:et:ts=4:sw=4:sts=0:

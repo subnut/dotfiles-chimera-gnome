@@ -1,0 +1,31 @@
+### Input configuration
+#
+# Example configuration:
+#
+#   input "2:14:SynPS/2_Synaptics_TouchPad" {
+#       dwt enabled
+#       tap enabled
+#       natural_scroll enabled
+#       middle_emulation enabled
+#   }
+#
+# You can get the names of your inputs by running: swaymsg -t get_inputs
+# Read `man 5 sway-input` for more information about this section.
+input "type:touchpad" {
+    dwt enabled
+    tap enabled
+    drag enabled
+    scroll_factor 0.3
+    tap_button_map lrm
+    scroll_method two_finger
+    middle_emulation enabled
+}
+input "2:14:ETPS/2_Elantech_TrackPoint" {
+    accel_profile adaptive
+    pointer_accel -0.2
+}
+input type:keyboard {
+    xkb_layout us,in(eng)
+}
+
+# vim:ft=swayconfig:
