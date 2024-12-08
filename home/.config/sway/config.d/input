@@ -27,5 +27,8 @@ input "2:14:ETPS/2_Elantech_TrackPoint" {
 input type:keyboard {
     xkb_layout us,in(eng)
 }
+input type:pointer {
+    accel_profile flat
+}
 
 # vim:ft=swayconfig:
