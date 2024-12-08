@@ -22,9 +22,9 @@ bar:
             content:
                 "":
                     map:
-                        default: {string: {foreground: 888888ff, !!merge <<: *i3-defaults}}
+                        default: {string: {foreground: 888888ff, <<: *i3-defaults}}
                         conditions:
-                            state == focused: {string: {deco: {background: {color: 285577ff}}, !!merge <<: *i3-defaults}}
+                            state == focused: {string: {deco: {background: {color: 285577ff}}, <<: *i3-defaults}}
                 current: # modes
                     map:
                         default:
@@ -45,7 +45,8 @@ bar:
                             list:
                                 spacing: *halfspace
                                 items:
-                                    - string: {text: "{app-id}", foreground: ffa0a0ff}
+                                    # - string: {text: "{app-id}", foreground: ffa0a0ff}
+                                    - string: {text: "{app-id}", foreground: 888888ff}
                                     - string: {text: "–", foreground: 888888ff}
                                     - string: {text: "{title}"}
         # - i3:
@@ -68,10 +69,19 @@ bar:
             poll-interval: 15000
             smoothing-secs: 60
             content:
-                - string:
-                    text: "{capacity}% ({estimate})"
-                    font: Recursive Sn Csl St:pixelsize=18
-                    foreground: 888888ff
+                map:
+                    default:
+                        string: &bat-defaults
+                            foreground: 888888ff
+                            text: "{capacity}% ({estimate})"
+                    conditions:
+                        state==charging: {string: {<<: *bat-defaults, foreground: 66bb66ff}}
+                        capacity > 90: {string: {<<: *bat-defaults, foreground: 66bb66ff}}
+                        capacity < 20: {string: {<<: *bat-defaults, foreground: ff4444ff, font: Recursive Sn Csl St:pixelsize=22}}
+                        capacity < 30: {string: {<<: *bat-defaults, foreground: ff6666ff, font: Recursive Sn Csl St:pixelsize=20}}
+                        capacity < 40: {string: {<<: *bat-defaults, foreground: ff6666ff}}
+                        capacity < 45: {string: {<<: *bat-defaults, foreground: ff8888ff}}
+                        capacity < 60: {string: {<<: *bat-defaults, foreground: ff8888ff}}  # TODO: yellow.
         - clock:
             date-format: "%a, %d %b %Y"
             content:
