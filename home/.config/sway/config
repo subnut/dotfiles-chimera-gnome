@@ -1,6 +1,7 @@
 ## Executables
 exec {
     wlsunset -l 22.96 -L 88.52
+    kanshi
     yambar
 }
 

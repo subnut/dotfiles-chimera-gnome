@@ -1,0 +1,8 @@
+profile default {
+	output eDP-1 enable
+}
+
+profile external-only {
+	output eDP-1 disable
+	output HDMI-A-1 enable
+}
